@@ -3,7 +3,8 @@ class TasksController < ApplicationController
     def index 
         # tasks = Task.all
         # tasks = Task.where(user_id: @user.id) || Task.all
-        tasks = Task.where(user_id: @user.id)
+        # tasks = Task.where(user_id: @user.id)
+        tasks = Task.where(user_id: current_user.id)
         # render json: User.all
         # User.find_by(id: user_id)
         # @tasks = Task.where(user_id: @user.id) || Task.all
