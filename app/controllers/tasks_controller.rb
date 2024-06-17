@@ -1,39 +1,25 @@
 class TasksController < ApplicationController
+    # before_action :authenticate_user!
 
     def index 
         # tasks = Task.all
-        # tasks = Task.where(user_id: @user.id) || Task.all
-        # tasks = Task.where(user_id: @user.id)
-        tasks = Task.where(user_id: current_user.id)
-        # render json: User.all
-        # User.find_by(id: user_id)
-        # @tasks = Task.where(user_id: @user.id) || Task.all
+        @tasks = current_user.tasks
 
-        if tasks
-           return render json: tasks.order(:status) || tasks.order(:order)
+        if @tasks
+           return render json: @tasks.order(:status) || @tasks.order(:order)
         else
             render json: {error: "Task could not be found."}
         end
 
-        # @tasks = Task.where(user_id: @user.id) || Task.all
-
-        # if @tasks
-        #    return render json: @tasks.order(:status) || @tasks.order(:order)
-        # else
-        #     render json: {error: "Task could not be found."}
-        # end
-
     end 
 
     def create 
-        @task = Task.new(task_params)
-        # task = current_user.task.new(task_params)
+        @task = current_user.tasks.build(task_params)
 
         if @task.save
             render json: @task
         else
-            # render json: {error: "Task could not be created. Please try again."}
-            render json: {error: task_params}
+            render json: {error: "Task could not be created. Please try again."}
         end
 
     end 
