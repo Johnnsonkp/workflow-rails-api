@@ -2,8 +2,9 @@ class TasksController < ApplicationController
     # before_action :authenticate_user!
 
     def index 
-        # tasks = Task.all
-        @tasks = @current_user.tasks
+        @tasks = Task.all
+        # @tasks = @current_user.tasks || current_user.tasks || @user.tasks
+        # @tasks = @current_user.tasks
 
         if @tasks
            return render json: @tasks.order(:status) || @tasks.order(:order)
