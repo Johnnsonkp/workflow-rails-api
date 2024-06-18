@@ -4,7 +4,8 @@ class TasksController < ApplicationController
     def index 
         # @tasks = Task.all
         # @tasks = @current_user.tasks || current_user.tasks || @user.tasks
-        @tasks = @current_user.tasks || current_user.task || @user.task || Task.all
+        # @tasks = @current_user.tasks || current_user.task || @user.task || Task.all
+        @tasks = set_current_user.tasks
 
         if @tasks
         #    return render json: @tasks.order(:status) || @tasks.order(:order)
@@ -17,8 +18,8 @@ class TasksController < ApplicationController
 
     def create 
         # @task = current_user.tasks.build(task_params)
-        @task = @current_user.Task.new(task_params) || current_user.Task.new(task_params) || @user.Task.new(task_params)
-
+        @task = set_current_user.Task.new(task_params) 
+        
         if @task.save
             render json: @task
         else

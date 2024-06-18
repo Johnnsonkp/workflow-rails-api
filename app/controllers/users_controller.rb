@@ -26,7 +26,7 @@ class UsersController < ApplicationController
         if @user
             # render json: @user
             # render json: current_user
-            render json: current_user
+            render json: set_current_user
         else
             render json: {error: "User could not be found."}
         end
