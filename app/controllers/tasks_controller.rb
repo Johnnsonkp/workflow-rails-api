@@ -2,12 +2,13 @@ class TasksController < ApplicationController
     # before_action :authenticate_user!
 
     def index 
-        @tasks = Task.all
+        # @tasks = Task.all
         # @tasks = @current_user.tasks || current_user.tasks || @user.tasks
-        # @tasks = @current_user.tasks
+        @tasks = @current_user.tasks || current_user.task || @user.task || Task.all
 
         if @tasks
-           return render json: @tasks.order(:status) || @tasks.order(:order)
+        #    return render json: @tasks.order(:status) || @tasks.order(:order)
+            render json: @tasks
         else
             render json: {error: "Task could not be found."}
         end
@@ -15,7 +16,8 @@ class TasksController < ApplicationController
     end 
 
     def create 
-        @task = current_user.tasks.build(task_params)
+        # @task = current_user.tasks.build(task_params)
+        @task = @current_user.Task.new(task_params) || current_user.Task.new(task_params) || @user.Task.new(task_params)
 
         if @task.save
             render json: @task
