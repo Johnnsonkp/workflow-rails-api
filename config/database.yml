@@ -80,12 +80,11 @@ test:
 #
 production:
   <<: *default
-  
   url: <%= ENV["DATABASE_URL"] %> 
   # database: <%= ENV["DATABASE_URL"] %>
-  database: workflow_rails_api_production
+  # database: workflow_rails_api_production
   # username: workflow_rails_api
-  username: <%= ENV["DB_USERNAME"] %>
+  # username: <%= ENV["DB_USERNAME"] %>
   # password: <%= ENV["WORKFLOW_RAILS_API_DATABASE_PASSWORD"] %>
-  password: <%= ENV["DB_PASSWORD"] %>
+  # password: <%= ENV["DB_PASSWORD"] %>
 
