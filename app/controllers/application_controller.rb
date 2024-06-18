@@ -40,6 +40,7 @@ class ApplicationController < ActionController::API
         # @current_user ||= User.find_by(id: @user.id)
 
         @current_user ||= User.find_by(id: user_id)
+        render json: {message: @current_user}
     end
 
 

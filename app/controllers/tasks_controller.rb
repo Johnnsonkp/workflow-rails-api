@@ -3,7 +3,7 @@ class TasksController < ApplicationController
 
     def index 
         # tasks = Task.all
-        @tasks = current_user.tasks
+        @tasks = @current_user.tasks
 
         if @tasks
            return render json: @tasks.order(:status) || @tasks.order(:order)
