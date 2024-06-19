@@ -1,22 +1,9 @@
 class TasksController < ApplicationController
-    # before_action :authenticate_user!
+    before_action :set_current_user
 
 
     def index 
-       
-        # header_token = token(request_params[:request])
-        user_token = request.headers["Authorization"] 
-        get_user_id = user_token.first["user_id"]
-
-        # userID = user_id(decoded_token(user_token))
-
-        # user = User.find_by(id: get_user_id)
-
-        # tasks = set_current_user.tasks
-        # tasks ||= Task.all
-
-        # tasks = user.tasks
-        tasks = current_user.tasks
+        tasks = @current_user.tasks
 
         if tasks
             render json: tasks
@@ -29,7 +16,7 @@ class TasksController < ApplicationController
     def create 
         # @task = current_user.tasks.build(task_params)
         # task = set_current_user.Task.new(task_params) 
-        task = current_user.Task.new(task_params) 
+        task = @current_user.Task.new(task_params) 
 
         if task.save
             render json: task
@@ -77,8 +64,9 @@ class TasksController < ApplicationController
         params.permit(:title, :description, :number, :status, :order, :start_date, :time_to_start, :time_to_finish, :user_id)
     end 
 
-    def request_params
-        params.permit(:request)
+    def set_current_user
+        # params.permit(:request)
+        @current_user ||= User.find_by(id: user_id)
     end 
 
 end

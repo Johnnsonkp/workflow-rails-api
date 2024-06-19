@@ -25,23 +25,35 @@ class ApplicationController < ActionController::API
         decoded_token.first["user_id"]
     end
 
-    def current_user
-        user ||= User.find_by(id: user_id)
-        # @current_user
+    # def current_user
+    #     return unless session[:user_id]
+    #     @current_user ||= User.find_by_id(session[:user_id])
+    #     # user ||= User.find_by(id: user_id)
+    #     # @current_user
+    # end
+
+    def user_session
+        @user
     end
 
     def logged_in?
         !!current_user
     end
 
-    def set_current_user
-        # @current_user ||= User.find_by(id: session[:user_id])
-        # @current_user ||= User.find_by(id: @user.id)
+    # def set_current_user
+    #     # @current_user ||= User.find_by(id: session[:user_id])
+    #     # @current_user ||= User.find_by(id: @user.id)
 
-        @current_user ||= User.find_by(id: user_id)
-        # render json: {message: @current_user}
-    end
+    #     @current_user ||= User.find_by(id: user_id)
+    #     # render json: {message: @current_user}
+    # end
+    
+    # private
 
+    # def current_user
+    #     return unless session[:user_id]
+    #     @current_user ||= User.find_by_id(session[:user_id])
+    # end
 
     # before_action :current_user
     # before_action :set_current_user
