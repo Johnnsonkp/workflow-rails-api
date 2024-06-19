@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-    before_action :set_current_user
+    # before_action :set_current_user
 
     def jwt_key
         Rails.application.credentials.jwt_key

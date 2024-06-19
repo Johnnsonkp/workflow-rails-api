@@ -3,20 +3,26 @@ class TasksController < ApplicationController
 
 
     def index 
-        if logged_in?
-            tasks = current_user.tasks
+       
+        # header_token = token(request_params[:request])
+        user_token = request.headers["Authorization"] 
+        get_user_id = user_token.first["user_id"]
 
-            render json: tasks
-        end 
+        # userID = user_id(decoded_token(user_token))
+
+        # user = User.find_by(id: get_user_id)
 
         # tasks = set_current_user.tasks
         # tasks ||= Task.all
 
-        # if tasks
-        #     render json: tasks
-        # else
-        #     render json: {error: "Task could not be found."}
-        # end
+        # tasks = user.tasks
+        tasks = current_user.tasks
+
+        if tasks
+            render json: tasks
+        else
+            render json: {error: "Task could not be found."}
+        end
 
     end 
 
@@ -69,6 +75,10 @@ class TasksController < ApplicationController
 
     def task_params
         params.permit(:title, :description, :number, :status, :order, :start_date, :time_to_start, :time_to_finish, :user_id)
+    end 
+
+    def request_params
+        params.permit(:request)
     end 
 
 end
