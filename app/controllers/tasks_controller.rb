@@ -9,8 +9,7 @@ class TasksController < ApplicationController
         # tasks = Task.all
 
         if tasks
-            # render json: tasks
-            # render json: Rails.env
+            render json: tasks
             puts "///////////////// Rails environment: #{Rails.env} /////////////////"
             puts "///////////////// current_user.id: #{@current_user.id} /////////////////"
             puts "///////////////// user: #{@user} /////////////////"

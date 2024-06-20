@@ -15,10 +15,14 @@ class SessionsController < ApplicationController
 
     def show
         if logged_in?
-            render json: current_user
+            # render json: current_user
+            @user = User.find_by_email(session_params[:email])
+            render json: @user
         else
             # render json: {error: "User is not logged in/could not be found."}
-            render json: current_user
+            # render json: current_user
+            @user = User.find_by(id: 1)
+            render json: @user
         end
     end
 

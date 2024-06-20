@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
     # before_action :set_current_user
+    before_action :current_user
 
     def jwt_key
         Rails.application.credentials.jwt_key
@@ -25,12 +26,12 @@ class ApplicationController < ActionController::API
         decoded_token.first["user_id"]
     end
 
-    # def current_user
-    #     return unless session[:user_id]
-    #     @current_user ||= User.find_by_id(session[:user_id])
-    #     # user ||= User.find_by(id: user_id)
-    #     # @current_user
-    # end
+    def current_user
+        # return unless session[:user_id]
+        # @current_user ||= User.find_by_id(session[:user_id])
+        @user ||= User.find_by(id: user_id)
+        # @current_user
+    end
 
 
     def user_session
