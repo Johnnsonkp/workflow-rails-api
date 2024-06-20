@@ -1,9 +1,9 @@
 class TasksController < ApplicationController
+    before_action :user_id
     before_action :current_user
 
     def index 
-        tasks = Task.joins(:user).where(user: { id: current_user.id })
-
+        tasks = Task.where(user_id: @user.id)
 
         if tasks
             render json: tasks
