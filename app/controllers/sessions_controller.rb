@@ -5,7 +5,7 @@ class SessionsController < ApplicationController
         if @user && @user.authenticate(session_params[:password])
             # session[:user_id] = @user.id
             # @user = UserSerializer.new(@user)
-
+            puts "App Environment #{Rails.env}" 
             token = issue_token(@user)
             render json: {user: UserSerializer.new(@user), jwt: token}
         else

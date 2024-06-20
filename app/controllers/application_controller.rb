@@ -32,6 +32,7 @@ class ApplicationController < ActionController::API
     #     # @current_user
     # end
 
+
     def user_session
         @user
     end

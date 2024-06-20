@@ -1,12 +1,21 @@
 class TasksController < ApplicationController
     before_action :set_current_user
+    before_action :user_id
+    before_action :token
 
 
     def index 
         tasks = @current_user.tasks
+        # tasks = Task.all
 
         if tasks
-            render json: tasks
+            # render json: tasks
+            # render json: Rails.env
+            puts "///////////////// Rails environment: #{Rails.env} /////////////////"
+            puts "///////////////// current_user.id: #{@current_user.id} /////////////////"
+            puts "///////////////// user: #{@user} /////////////////"
+            puts "///////////////// user_id: #{user_id} /////////////////"
+            puts "///////////////// token: #{token} /////////////////"
         else
             render json: {error: "Task could not be found."}
         end
