@@ -1,29 +1,14 @@
 class TasksController < ApplicationController
-    before_action :set_current_user
-    before_action :user_id
-    before_action :token
-
+    before_action :current_user
 
     def index 
-        tasks = set_current_user.tasks
+        tasks = Task.joins(:user).where(user: { id: current_user.id })
 
-        header_token = request.headers["Authorization"]
-        token_decoded = cx_decoded_token(header_token)
-        new_user_id = token_decoded.first["user_id"]
-        user_request ||= User.find_by(id: new_user_id)
 
-        user_tasks = user_request.tasks
-
-        if user_request
-
-            puts "///////////////// user_request: #{user_request} /////////////////"
-        end 
-
-        if user_tasks
-            render json: user_tasks
+        if tasks
+            render json: tasks
         else
-            # render json: {error: "Task could not be found."}
-            render json: Task.all
+            render json: {error: "Task could not be found."}
         end
     end 
 
@@ -33,7 +18,7 @@ class TasksController < ApplicationController
         if task.save
             render json: task
         else
-            # render json: {error: "Task could not be created. Please try again."}
+            render json: {error: "Task could not be created. Please try again."}
         end
 
     end 
@@ -90,17 +75,21 @@ class TasksController < ApplicationController
         Rails.application.credentials.jwt_key
     end
 
-    def cx_decoded_token(header_token)
+    def issue_token(user)
+        JWT.encode({user_id: user.id}, jwt_key, "HS256")
+    end
+
+    def decoded_token
         begin
-            JWT.decode(header_token, jwt_key, true, { :algorithm => 'HS256' })
+            JWT.decode(token, jwt_key, true, { :algorithm => 'HS256' })
         rescue => exception
             [{error: "Invalid Token"}]
         end    
     end
 
-    # def token
-    #     request.headers["Authorization"]
-    # end
+    def token
+        request.headers["Authorization"]
+    end
 
     def user_id
         decoded_token.first["user_id"]
