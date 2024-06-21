@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::API
     # before_action :set_current_user
-    before_action :current_user
+    # before_action :current_user
     # before_action :authenticate_request
 
     def jwt_key

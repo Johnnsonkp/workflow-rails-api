@@ -9,10 +9,17 @@ class TasksController < ApplicationController
         testVar = ENV['JWT_KEY']
 
         puts "/////// testVar: #{testVar} ////////////"
-        puts "/////// current_user: #{current_user} ////////////"
+        puts "/////// current_user: #{current_user} ////////////" 
+        puts "/////// set_current_user_for_tasks: #{set_current_user_for_tasks} ////////////"
+        puts "/////// authenticate: #{authenticate} ////////////" 
 
-        # @tasks = current_user.tasks
-        render json: Task.all 
+        if set_current_user_for_tasks 
+            puts "if set_current_user_for_tasks"
+            render json: set_current_user_for_tasks.tasks 
+        else 
+            puts "else: task.all"
+            render json: Task.all 
+        end 
     end 
 
     def create 
@@ -64,8 +71,30 @@ class TasksController < ApplicationController
         params.permit(:title, :description, :number, :status, :order, :start_date, :time_to_start, :time_to_finish, :user_id)
     end 
 
-    def user_id_req()
-        decoded_token.first["user_id"]
+    # def user_id_req()
+    #     decoded_token.first["user_id"]
+    # end
+
+    def authenticate
+        jwt_key_var = ENV['JWT_KEY'] 
+        header_token = request.headers["Authorization"]
+
+        if jwt_key_var && header_token
+            @auth_user_id = decode_token_process(header_token, jwt_key_var).first["user_id"]
+        end
+       
+    end 
+
+    def decode_token_process(header_token, jwt_key_var)
+        begin
+            JWT.decode(header_token, jwt_key_var, true, { :algorithm => 'HS256' })
+        rescue => exception
+            [{error: "Invalid Token"}]
+        end 
+    end
+
+    def set_current_user_for_tasks
+        @user ||= User.find_by(id: authenticate)
     end
 
 
