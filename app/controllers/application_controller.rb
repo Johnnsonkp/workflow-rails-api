@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
     # before_action :set_current_user
     # before_action :current_user
+    # before_action :authenticate_request
 
     def jwt_key
         Rails.application.credentials.jwt_key
@@ -26,12 +27,9 @@ class ApplicationController < ActionController::API
         decoded_token.first["user_id"]
     end
 
-    def current_user
-        # return unless session[:user_id]
-        # @current_user ||= User.find_by_id(session[:user_id])
-        @user ||= User.find_by(id: user_id)
-        # @current_user
-    end
+    # def current_user
+    #     @user ||= User.find_by(id: user_id)
+    # end
 
 
     def user_session
@@ -40,6 +38,20 @@ class ApplicationController < ActionController::API
 
     def logged_in?
         !!current_user
+    end
+
+    private
+
+    def authenticate_request
+        token = request.headers['Authorization']&.split(' ')&.last
+        decoded_token = JsonWebToken.decode(token)
+        @current_user = User.find(decoded_token[:user_id])
+      rescue StandardError => e
+        render json: { error: e.message }, status: :unauthorized
+    end
+    
+    def current_user
+        @current_user
     end
 
     # def set_current_user

@@ -1,26 +1,17 @@
 class TasksController < ApplicationController
 
     def index 
-        jwt_key_internal = Rails.application.credentials.jwt_key
-        request_token = request.headers['Authorization']
+        # jwt_key_internal = Rails.application.credentials.jwt_key
+        # request_token = request.headers['Authorization']
         # user_id_req = JWT.decode(request_token, jwt_key_internal, true, { :algorithm => 'HS256' })
         # new_user_id = user_id_req.first["user_id"] 
 
+        testVar = ENV['JWT_KEY']
 
-        if request_token && jwt_key_internal
-            # current_user = User.find_by_id(new_user_id)
-            # tasks = Task.where(user_id: new_user_id)
+        puts "/////// testVar: #{testVar} ////////////"
 
-            puts "///// request token: #{request_token} ////////"
-            puts "///// jwt_key_internal: #{jwt_key_internal} ////////"
-            # puts "///// new_user_id: #{new_user_id} ////////"
-            # puts "///// current_user: #{current_user.tasks.length} ////////"
-            # puts "///// current_user.length: #{current_user.tasks.length} ////////"
-
-            render json: Task.all
-        else
-            render json: {error: "Task could not be found."}
-        end
+        # @tasks = current_user.tasks
+        render json: Task.all 
     end 
 
     def create 
@@ -76,43 +67,6 @@ class TasksController < ApplicationController
         decoded_token.first["user_id"]
     end
 
-    # def set_current_user
-    #     # params.permit(:request)
-    #     @current_user ||= User.find_by(id: user_id)
-    # end 
-
-    # def authorized_user 
-    #     params.permit(:Authorization)
-    # end
-
-
-    # def jwt_key
-    #     Rails.application.credentials.jwt_key
-    # end
-
-    # def issue_token(user)
-    #     JWT.encode({user_id: user.id}, jwt_key, "HS256")
-    # end
-
-    def decoded_token
-        begin
-            JWT.decode(request_token, jwt_key_internal, true, { :algorithm => 'HS256' })
-        rescue => exception
-            [{error: "Invalid Token"}]
-        end    
-    end
-
-    # def token
-    #     request.headers["Authorization"]
-    # end
-
-    # def user_id
-    #     decoded_token.first["user_id"]
-    # end
-
-    # def current_user
-    #     @user ||= User.find_by(id: user_id)
-    # end
 
 end
 
