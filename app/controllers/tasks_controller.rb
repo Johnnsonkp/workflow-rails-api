@@ -1,27 +1,23 @@
 class TasksController < ApplicationController
 
     def index 
-        jwt_key_internal =  Rails.application.credentials.jwt_key
+        jwt_key_internal = Rails.application.credentials.jwt_key
         request_token = request.headers['Authorization']
-        # user_id_req = request_token.first["user_id"]
-        # tasks = Task.where(user_id: user_id_req)
-        tasks = Task.all
+        user_id_req = JWT.decode(request_token, jwt_key_internal, true, { :algorithm => 'HS256' })
+        new_user_id = user_id_req.first["user_id"] 
 
-        if request_token
-            @user_id_req = decoded_token.first["user_id"] 
-        end
 
-        if @user_id_req 
-            @test_tasks = Task.where(user_id: @user_id_req)
-        end 
-        
+        if new_user_id
+            current_user = User.find_by_id(new_user_id)
+            tasks = Task.where(user_id: new_user_id)
 
-        if tasks
             puts "///// request token: #{request_token} ////////"
-            puts "///// @user_id_req: #{@user_id_req} ////////"
-            puts "///// @test_tasks: #{@test_tasks} ////////"
+            puts "///// jwt_key_internal: #{jwt_key_internal} ////////"
+            puts "///// new_user_id: #{new_user_id} ////////"
+            puts "///// current_user: #{current_user.tasks.length} ////////"
+            puts "///// current_user.length: #{current_user.tasks.length} ////////"
 
-            render json: tasks
+            render json: current_user.tasks
         else
             render json: {error: "Task could not be found."}
         end

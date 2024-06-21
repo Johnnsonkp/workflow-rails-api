@@ -4,9 +4,6 @@ class ApplicationController < ActionController::API
 
     def jwt_key
         Rails.application.credentials.jwt_key
-        # <%= ENV["JWT_KEY"] %>
-
-        # jwt_key = <%= ENV["JWT_KEY"] %>
     end
 
     def issue_token(user)
