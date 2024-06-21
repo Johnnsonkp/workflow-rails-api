@@ -1,11 +1,12 @@
 class TasksController < ApplicationController
-    before_action :user_id
-    before_action :current_user
 
     def index 
-        tasks = Task.where(user_id: @user.id)
+        request_token = request.headers['Authorization']
+        tasks = Task.where(user_id: user_id)
+        
 
         if tasks
+            puts "///// request token: #{request_token} ////////"
             render json: tasks
         else
             render json: {error: "Task could not be found."}
@@ -61,43 +62,43 @@ class TasksController < ApplicationController
         params.permit(:title, :description, :number, :status, :order, :start_date, :time_to_start, :time_to_finish, :user_id)
     end 
 
-    def set_current_user
-        # params.permit(:request)
-        @current_user ||= User.find_by(id: user_id)
-    end 
+    # def set_current_user
+    #     # params.permit(:request)
+    #     @current_user ||= User.find_by(id: user_id)
+    # end 
 
-    def authorized_user 
-        params.permit(:Authorization)
-    end
+    # def authorized_user 
+    #     params.permit(:Authorization)
+    # end
 
 
-    def jwt_key
-        Rails.application.credentials.jwt_key
-    end
+    # def jwt_key
+    #     Rails.application.credentials.jwt_key
+    # end
 
-    def issue_token(user)
-        JWT.encode({user_id: user.id}, jwt_key, "HS256")
-    end
+    # def issue_token(user)
+    #     JWT.encode({user_id: user.id}, jwt_key, "HS256")
+    # end
 
-    def decoded_token
-        begin
-            JWT.decode(token, jwt_key, true, { :algorithm => 'HS256' })
-        rescue => exception
-            [{error: "Invalid Token"}]
-        end    
-    end
+    # def decoded_token
+    #     begin
+    #         JWT.decode(token, jwt_key, true, { :algorithm => 'HS256' })
+    #     rescue => exception
+    #         [{error: "Invalid Token"}]
+    #     end    
+    # end
 
-    def token
-        request.headers["Authorization"]
-    end
+    # def token
+    #     request.headers["Authorization"]
+    # end
 
-    def user_id
-        decoded_token.first["user_id"]
-    end
+    # def user_id
+    #     decoded_token.first["user_id"]
+    # end
 
-    def current_user
-        @user ||= User.find_by(id: user_id)
-    end
+    # def current_user
+    #     @user ||= User.find_by(id: user_id)
+    # end
 
 end
 
