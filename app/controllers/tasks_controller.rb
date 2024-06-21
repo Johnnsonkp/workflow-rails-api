@@ -1,14 +1,26 @@
 class TasksController < ApplicationController
 
     def index 
+        jwt_key_internal =  Rails.application.credentials.jwt_key
         request_token = request.headers['Authorization']
-        # tasks = Task.where(user_id: user_id)
+        # user_id_req = request_token.first["user_id"]
+        # tasks = Task.where(user_id: user_id_req)
         tasks = Task.all
+
+        if request_token
+            @user_id_req = decoded_token.first["user_id"] 
+        end
+
+        if @user_id_req 
+            @test_tasks = Task.where(user_id: @user_id_req)
+        end 
         
 
         if tasks
             puts "///// request token: #{request_token} ////////"
-            puts "///// user_id: #{user_id} ////////"
+            puts "///// @user_id_req: #{@user_id_req} ////////"
+            puts "///// @test_tasks: #{@test_tasks} ////////"
+
             render json: tasks
         else
             render json: {error: "Task could not be found."}
@@ -64,6 +76,10 @@ class TasksController < ApplicationController
         params.permit(:title, :description, :number, :status, :order, :start_date, :time_to_start, :time_to_finish, :user_id)
     end 
 
+    def user_id_req()
+        decoded_token.first["user_id"]
+    end
+
     # def set_current_user
     #     # params.permit(:request)
     #     @current_user ||= User.find_by(id: user_id)
@@ -82,13 +98,13 @@ class TasksController < ApplicationController
     #     JWT.encode({user_id: user.id}, jwt_key, "HS256")
     # end
 
-    # def decoded_token
-    #     begin
-    #         JWT.decode(token, jwt_key, true, { :algorithm => 'HS256' })
-    #     rescue => exception
-    #         [{error: "Invalid Token"}]
-    #     end    
-    # end
+    def decoded_token
+        begin
+            JWT.decode(request_token, jwt_key_internal, true, { :algorithm => 'HS256' })
+        rescue => exception
+            [{error: "Invalid Token"}]
+        end    
+    end
 
     # def token
     #     request.headers["Authorization"]
