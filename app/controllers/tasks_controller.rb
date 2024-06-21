@@ -2,11 +2,13 @@ class TasksController < ApplicationController
 
     def index 
         request_token = request.headers['Authorization']
-        tasks = Task.where(user_id: user_id)
+        # tasks = Task.where(user_id: user_id)
+        tasks = Task.all
         
 
         if tasks
             puts "///// request token: #{request_token} ////////"
+            puts "///// user_id: #{user_id} ////////"
             render json: tasks
         else
             render json: {error: "Task could not be found."}
