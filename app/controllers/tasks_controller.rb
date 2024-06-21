@@ -9,6 +9,7 @@ class TasksController < ApplicationController
         testVar = ENV['JWT_KEY']
 
         puts "/////// testVar: #{testVar} ////////////"
+        puts "/////// current_user: #{current_user} ////////////"
 
         # @tasks = current_user.tasks
         render json: Task.all 

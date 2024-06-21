@@ -1,14 +1,19 @@
 class ApplicationController < ActionController::API
     # before_action :set_current_user
-    # before_action :current_user
+    before_action :current_user
     # before_action :authenticate_request
 
     def jwt_key
-        Rails.application.credentials.jwt_key
+        # Rails.application.credentials.jwt_key
+        ENV['JWT_KEY'] || Rails.application.credentials.jwt_key
     end
 
     def issue_token(user)
         JWT.encode({user_id: user.id}, jwt_key, "HS256")
+    end
+
+    def token
+        request.headers["Authorization"]
     end
 
     def decoded_token
@@ -19,17 +24,14 @@ class ApplicationController < ActionController::API
         end    
     end
 
-    def token
-        request.headers["Authorization"]
-    end
 
     def user_id
         decoded_token.first["user_id"]
     end
 
-    # def current_user
-    #     @user ||= User.find_by(id: user_id)
-    # end
+    def current_user
+        @user ||= User.find_by(id: user_id)
+    end
 
 
     def user_session
@@ -42,17 +44,17 @@ class ApplicationController < ActionController::API
 
     private
 
-    def authenticate_request
-        token = request.headers['Authorization']&.split(' ')&.last
-        decoded_token = JsonWebToken.decode(token)
-        @current_user = User.find(decoded_token[:user_id])
-      rescue StandardError => e
-        render json: { error: e.message }, status: :unauthorized
-    end
+    # def authenticate_request
+    #     token = request.headers['Authorization']&.split(' ')&.last
+    #     decoded_token = JsonWebToken.decode(token)
+    #     @current_user = User.find(decoded_token[:user_id])
+    #   rescue StandardError => e
+    #     render json: { error: e.message }, status: :unauthorized
+    # end
     
-    def current_user
-        @current_user
-    end
+    # def current_user
+    #     @current_user
+    # end
 
     # def set_current_user
     #     # @current_user ||= User.find_by(id: session[:user_id])
