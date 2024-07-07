@@ -2,8 +2,11 @@ Rails.application.routes.draw do
   resources :projects
   resources :tasks
   resources :users
+  resources :standups
 
   root 'sessions#show'
+
+  get "/standups/all", to: "standups#all"
 
   post "/signup", to: "users#create"
   post "/login", to: "sessions#create"

@@ -1,19 +1,10 @@
 class TasksController < ApplicationController
+    before_action :get_user_id_method
 
     def index 
-        jwt_key_var = ENV['JWT_KEY'] ||  Rails.application.credentials.jwt_key
-        header_token = request.headers["Authorization"]
-        get_user_id = authenticate(jwt_key_var, header_token).first['user_id']
-
-        @user ||= User.find_by(id: get_user_id)
-
-        puts "/////// jwt_key_var: #{jwt_key_var} ////////////"
-        puts "/////// header_token: #{header_token} ////////////" 
-        puts "/////// get_user_id: #{get_user_id} /////////////"
-        puts "/////// @user: #{ @user } ////////////"
+        @user = User.find_by(id: get_user_id_method)
 
         if @user 
-            puts "if set_current_user_for_tasks"
             render json: @user.tasks 
         end 
     end 
@@ -88,34 +79,16 @@ class TasksController < ApplicationController
        
     end 
 
-    # def decode_token_process(header_token, jwt_key_var)
-    #     begin
-    #         JWT.decode(header_token, jwt_key_var, true, { :algorithm => 'HS256' })
-    #     rescue => exception
-    #         [{error: "Invalid Token"}]
-    #     end 
-    # end
+    def get_user_id_method
+        jwt_key_var = ENV['JWT_KEY'] ||  Rails.application.credentials.jwt_key
+        header_token = request.headers["Authorization"]
 
-    # def set_current_user_for_tasks
-    #     @user ||= User.find_by(id: authenticate)
-    # end
+        decoded_token = authenticate(jwt_key_var, header_token)
+        get_user_id = decoded_token.first['user_id']
+    end 
 
 
 end
 
-
-# stand_up: model 
-#   id: number
-#   date: string,
-#   value_1: {value: string, complete: false: default},
-#   value_2: {value: string, complete: false: default},
-#   value_3: {value: string, complete: false: default},
-
-# stand_down: model 
-#   id: number
-#   date: string,
-#   value_1: {value: string, complete: false: default},
-#   value_2: {value: string, complete: false: default},
-#   value_3: {value: string, complete: false: default},
 
     

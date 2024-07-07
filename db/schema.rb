@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_11_074523) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_28_032855) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_11_074523) do
     t.string "finish_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "standup_tasks", force: :cascade do |t|
+    t.bigint "standup_id", null: false
+    t.string "title"
+    t.boolean "complete", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["standup_id"], name: "index_standup_tasks_on_standup_id"
+  end
+
+  create_table "standups", force: :cascade do |t|
+    t.string "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_standups_on_user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -46,5 +63,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_11_074523) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "standup_tasks", "standups"
+  add_foreign_key "standups", "users"
   add_foreign_key "tasks", "users"
 end

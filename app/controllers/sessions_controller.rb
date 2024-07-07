@@ -12,29 +12,15 @@ class SessionsController < ApplicationController
 
     def show
         if logged_in?
-            # render json: current_user
-            @user = User.find_by_email(session_params[:email])
             render json: @user
         else
-            # render json: {error: "User is not logged in/could not be found."}
-            # render json: current_user
-            @user = User.find_by(id: 1)
-            render json: @user
+            render json: {error: "User is not logged in/could not be found."}
         end
     end
 
     private
 
-    # def current_user_session
-    #     @user = User.find_by_email(session_params[:email])
-
-    #     if @user 
-    #         set_current_user(@user)
-    #     end 
-    # end 
-
     def session_params
-        # params.require(:session).permit(:email, :password)
         params.permit(:email, :password)
     end
 end
