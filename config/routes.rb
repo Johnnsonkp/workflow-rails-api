@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :tasks
   resources :users
   resources :standups
+  resources :habits
 
   root 'sessions#show'
 

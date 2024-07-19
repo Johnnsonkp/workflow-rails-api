@@ -4,6 +4,7 @@ class User < ApplicationRecord
     has_many :tasks
     has_many :projects
     has_many :standup
+    has_many :habit
 
     validates :username, presence: {message: "Username field is empty."}
     validates :password, presence: {message: "Password field is empty."}

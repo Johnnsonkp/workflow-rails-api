@@ -13,3 +13,27 @@
 if User.length < 1 
     User.create(username: "Test1", email: "test1@gmail.com", password: "1234")
 end 
+
+
+if Habit.length < 1
+    Habit.create(
+        title: "Bible study",
+        description: "Daily bible study ",
+        current_streak: 2,
+        entries: [
+            Entry.new(date: '2024-07-14', complete: true),
+            Entry.new(date: '2024-07-15', complete: true),
+        ]
+    )
+
+    Habit.create(
+        title: "Daily read",
+        description: "Read at least 10 pages per day",
+        current_streak: 0,
+        entries: [
+            Entry.new(date: '2024-07-14', complete: true),
+            Entry.new(date: '2024-07-15', complete: false),
+        ]
+    )
+end
+  

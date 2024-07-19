@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_28_032855) do
+ActiveRecord::Schema[7.1].define(version: 2024_07_15_151456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "entries", force: :cascade do |t|
+    t.string "date"
+    t.boolean "complete"
+    t.bigint "habit_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["habit_id"], name: "index_entries_on_habit_id"
+  end
+
+  create_table "habits", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.integer "current_streak"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_habits_on_user_id"
+  end
 
   create_table "projects", force: :cascade do |t|
     t.string "title"
@@ -63,6 +82,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_28_032855) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "entries", "habits"
+  add_foreign_key "habits", "users"
   add_foreign_key "standup_tasks", "standups"
   add_foreign_key "standups", "users"
   add_foreign_key "tasks", "users"

@@ -49,22 +49,12 @@ class StandupsController < ApplicationController
     end 
 
     def update 
-        @stand_up = Standup.find(params[:id])
+        @stand_up_task = StandupTask.find_by(id: params[:id])
+        @stand_up_task.update(title: params[:title], complete: params[:complete], standup_id: params[:standup_id])
 
-        if @stand_up
-            @stand_up.update(date: params[:date])
-            @stand_up.standup_tasks.update(params[:standup_tasks])
-            # @stand_up.standup_tasks[1].update(standup_task_2)
-            # @stand_up.standup_tasks[2].update(standup_task_3)
-
-            puts @stand_up.standup_tasks
-            # @stand_up.standup_tasks.update(params[:standup_tasks])
-
-            # @req_stand_up.each do |stand_up_params|
-            #     @stand_up.standup_tasks.update(title: stand_up_params[:title], complete: stand_up_params[:complete])
-            # end
-
-            render json: {stand_up: @stand_up, standup_tasks: @stand_up.standup_tasks}
+        if @stand_up_task
+            puts "@stand_up_task: #{@stand_up_task}"
+            render json: @stand_up_task
         end 
     end 
 
