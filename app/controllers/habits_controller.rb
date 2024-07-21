@@ -22,10 +22,11 @@ class HabitsController < ApplicationController
                 
                 habit.entries.reverse
                 habit.entries.each do |entry|
-                    if formatted_date == entry.date && entry.complete? 
+                    # if formatted_date == entry.date && entry.complete? 
+                    if entry.date && entry.complete? 
                         num += 1 
                     else 
-                        break 
+                        num = 0 
                     end 
                 end 
                 
