@@ -24,8 +24,6 @@ class UsersController < ApplicationController
     def show 
         # user = User.find(params[:id])
         if @user
-            # render json: @user
-            # render json: current_user
             render json: set_current_user
         else
             render json: {error: "User could not be found."}
