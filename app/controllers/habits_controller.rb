@@ -57,19 +57,24 @@ class HabitsController < ApplicationController
     def update 
         @habit = Habit.find(params[:id])
         request_params = {date: params[:date], complete: params[:complete]}
+        entry_to_update = @habit.entries.find_by(date: params[:date])
+        # updated_entry = entry_to_update.update(complete: params[:complete])
+
         habit_arr = []
 
-        if @habit && @habit.entries.size > 0
-            entry_to_update = @habit.entries.find_by(date: params[:date])
-            updated_entry = @habit.entries.find_by(date: params[:date]).update(complete: params[:complete])
+        if @habit && @habit.entries.size > 0 && entry_to_update
+            # entry_to_update = @habit.entries.find_by(date: params[:date])
+            # updated_entry = entry_to_update.update(complete: params[:complete])
+            
+            @habit.entries.find_by(date: params[:date]).update(complete: params[:complete])
 
-            if updated_entry
+            if entry_to_update
                 render json: {habit: @habit, entries: @habit.entries }
             end
 
         else 
-            entry_presence = @habit.entries.find_by(date: params[:date])
-            if !entry_presence 
+            # entry_presence = @habit.entries.find_by(date: params[:date])
+            if !entry_to_update 
                 puts "\\\\\\\\\\\\\\ Create !entry_presence & create_new_entry //////////////"
                 @habit.entries.create(request_params)
                 render json: {habit: @habit, entries: @habit.entries }
